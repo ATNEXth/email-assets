@@ -59,6 +59,22 @@
       border-radius: 6px;
     }
 
+    a.button-link {
+      display: inline-block;
+      margin-top: 1rem;
+      background-color: var(--accent);
+      color: white;
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    a.button-link:hover {
+      background-color: #004bb5;
+    }
+
     .footer {
       margin-top: 3rem;
       font-size: 0.9rem;
@@ -69,6 +85,13 @@
 <body>
   <h1>🖼️ ATNEX Logo CDN</h1>
   <p>This page hosts public logo assets for email signatures or websites.</p>
+
+  <div class="url-box">
+    <p><strong>Email Signature Generator</strong></p>
+    <a class="button-link" href="https://cdn.atnex.co.th/ATNEX_Email_Signature_Generator.html" target="_blank">
+      Open Email Signature Generator
+    </a>
+  </div>
 
   <div class="url-box">
     <p><strong>1. CDN Link</strong></p>
