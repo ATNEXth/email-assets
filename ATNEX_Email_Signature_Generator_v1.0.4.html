@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Signature Generator</title>
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      color: #222;
+      background: #fff;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+    input.error {
+      border-color: red !important;
+    }
+    button {
+      margin-top: 18px;
+      padding: 10px 22px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+      background-color: #1a73e8;
+      color: white;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      
+    }
+    button:hover {
+      background-color: #155ab6;
+    }
+    #preview-container {
+      margin-top: 40px;
+      padding: 20px 25px 25px 25px;
+      border: 1px solid #ddd;
+      background-color: #fafafa;
+      position: relative;
+      border-radius: 6px;
+      box-shadow: 0 0 6px rgb(0 0 0 / 0.05);
+    }
+    #preview-separator {
+      margin-top: 40px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+    }
+    #copyBtn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    #copyBtn:hover {
+      background-color: #155ab6;
+    }
+    .header-page{
+        font-family: Tahoma, sans-serif;
+        font-size: 36px;
+        font-weight: bold;
+        color: #1a73e8;
+    }
+    .sig-table {
+      font-family: Tahoma, sans-serif;
+      font-size: 14px;
+      color: #222;
+      line-height: 1.5;
+    }
+    .sig-td {
+      padding-bottom: 14px;
+    }
+    .sig-name {
+    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+    font-weight: bold;
+    }
+    .sig-name-th {
+    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: normal;
+    }
+    .sig-title {
+    color: #555;
+    font-weight: 800;
+    margin-top: 2px;
+    font-size: 14px;
+    line-height: 1.2;
+    }
+    .sig-link {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+    }
+    .sig-logo {
+    padding-top: 12px;
+    padding-bottom: 6px;
+    border-top: 1px solid #ddd;
+    }
+    .sig-contact {
+    font-size: 12px;
+    }
+    .sig-company {
+    font-weight: bold;
+    color: #1a1a1a;
+    font-size: 14px;
+    line-height: 1.4;
+    }
+    .sig-address {
+    font-size: 12px;
+    color: #666666;
+    padding-top: 4px;
+    max-width: 380px;
+    line-height: 1.3;
+    padding-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+      <div class="header-page">ATNEX Email Signature Generator</div>
+      <div style="font-size: 12px;"> v.1.0.4 </biv>
+  </div>
+  <br>
+
+  <div style="display: flex; gap: 16px;">
+    <div style="flex: 2;">
+      <label for="fullName">Full Name *</label>
+      <input type="text" id="fullName" placeholder="Somchi Somsiri" />
+    </div>
+    <div style="flex: 1;">
+      <label for="nickname">Nickname</label>
+      <input type="text" id="nickname" placeholder="Chai" />
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 16px;">
+    <div style="flex: 2;">
+      <label for="fullName-th">ชื่อ นามสกุล *</label>
+      <input type="text" id="fullName-th" placeholder="สมชาย สมศิริ" />
+    </div>
+    <div style="flex: 1;">
+      <label for="nickname-th">ชื่อเล่น</label>
+      <input type="text" id="nickname-th" placeholder="ชาย" />
+    </div>
+  </div>
+
+  <label for="title">Job Title *</label>
+  <input type="text" id="title" placeholder="Engineer" />
+
+  <label for="phone">Phone *</label>
+  <input type="text" id="phone" placeholder="0899999999" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" />
+
+  <label for="email">Email *</label>
+  <input type="email" id="email" placeholder="user@atnex.co.th" />
+
+  <label for="closing">Email Closing</label>
+  <select id="closing">
+    <option value="Best regards">Best regards</option>
+    <option value="Sincerely">Sincerely</option>
+    <option value="Warm regards">Warm regards</option>
+    <option value="Kind regards">Kind regards</option>
+    <option value="Thanks">Thanks</option>
+  </select>
+
+  <button onclick="generateSignature()">Generate</button>
+
+  <div id="preview-separator"></div>
+
+  <div id="preview-container" style="display:none;">
+    <button id="copyBtn" onclick="copySignature()">COPY</button>
+    <div id="preview"></div>
+  </div>
+
+  <script>
+    let lastGeneratedHTML = '';
+
+    function formatPhone(phone) {
+      let digits = phone.replace(/\D/g, '');
+      if (digits.startsWith('0')) digits = digits.substring(1);
+      if (digits.length === 9) {
+        return '+66 ' + digits.slice(0, 2) + ' ' + digits.slice(2, 5) + ' ' + digits.slice(5);
+      }
+      return '+66 ' + digits;
+    }
+
+    function highlightError(inputEl, hasError) {
+      if (hasError) {
+        inputEl.classList.add('error');
+      } else {
+        inputEl.classList.remove('error');
+      }
+    }
+
+    function generateSignature() {
+      const fullNameEl = document.getElementById('fullName');
+      const nicknameEl = document.getElementById('nickname');
+      const fullName_thEl = document.getElementById('fullName-th');
+      const nickname_thEl = document.getElementById('nickname-th');
+      const titleEl = document.getElementById('title');
+      const phoneEl = document.getElementById('phone');
+      const emailEl = document.getElementById('email');
+      const closingEl = document.getElementById('closing');
+
+      const fullNameRaw = fullNameEl.value.trim();
+      const fullName_th = fullName_thEl.value.trim();
+      const nickname = nicknameEl.value.trim();
+      const nickname_th = nickname_thEl.value.trim();
+      const title = titleEl.value.trim();
+      const phoneRaw = phoneEl.value.trim();
+      const email = emailEl.value.trim();
+      const closing = closingEl.value;
+
+      // Capitalize each word in full name properly
+      const fullName = fullNameRaw.replace(/\b\w/g, c => c.toUpperCase());
+
+      let valid = true;
+
+      if (!fullNameRaw) {
+        highlightError(fullNameEl, true);
+        valid = false;
+      } else {
+        highlightError(fullNameEl, false);
+      }
+
+      if (!fullName_th){
+        highlightError(fullName_thEl, true);
+        valid = false;
+      } else{
+        highlightError(fullName_thEl, false)
+      }
+
+      if (!title) {
+        highlightError(titleEl, true);
+        valid = false;
+      } else {
+        highlightError(titleEl, false);
+      }
+
+      if (!phoneRaw) {
+        highlightError(phoneEl, true);
+        valid = false;
+      } else {
+        highlightError(phoneEl, false);
+      }
+
+      if (!email) {
+        highlightError(emailEl, true);
+        valid = false;
+      } else {
+        highlightError(emailEl, false);
+      }
+
+      if (!valid) {
+        alert('Please fill all required fields marked with *.');
+      }
+
+      const phone = formatPhone(phoneRaw);
+      const displayName = fullNameRaw ? (nickname ? `${fullName} (${nickname})` : fullName) : (nickname ? `Name Lastname (${nickname})` : "Name Lastname");
+      const displayName_th = fullName_th ? (nickname_th ? `${fullName_th} (${nickname_th})` : fullName_th) : (nickname_th ? `ชื่อ นามสกุล (${nickname_th})` : "ชื่อ นามสกุล");
+
+      const data = {
+        CLOSING: closing,
+        FULL_NAME: displayName,
+        FULL_NAME_TH: displayName_th,
+        TITLE: title || 'Job Title',
+        PHONE: phone,
+        EMAIL: email || 'user@atnex.co.th',
+        ADDRESS: "41/96-97, Kanlapaphruek Road, Bang Khae, Bangkok 10160, Thailand"
+      };
+
+      let html = `
+        <table cellpadding="0" cellspacing="0" class="sig-table">
+            <tr>
+              <td class="sig-td">
+                {{CLOSING}},
+                <br>
+                <br>
+                <div style="line-height: 1.2;">
+                  <strong class="sig-name">{{FULL_NAME}}</strong><br>
+                  <span class="sig-name-th">{{FULL_NAME_TH}}</span>
+                </div>
+                <strong class="sig-title">{{TITLE}}</strong>
+              </td>
+            </tr>
+            
+            <tr>
+                <td class="sig-logo">
+                  <img src="https://cdn.atnex.co.th/logo.png" alt="ATNEX Logo" style="height: 40px;">
+                </td>
+            </tr>
+
+            <tr>
+                <td class="sig-company">
+                    ATNEX Company Limited<br>
+                </td>
+            </tr>
+            <tr>
+              <td class="sig-address">
+                <span>{{ADDRESS}}</span>
+              </td>
+            </tr>
+            
+            <tr>
+              <td class="sig-contact">
+                <strong>Phone:</strong> <a href="tel:{{PHONE}}" class="sig-link">{{PHONE}}</a><br>
+                <strong>Email:</strong> <a href="mailto:{{EMAIL}}" class="sig-link">{{EMAIL}}</a>
+              </td>
+            </tr>
+        </table>
+      `;
+
+      for (const key in data) {
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        html = html.replace(regex, data[key] || '');
+      }
+
+      lastGeneratedHTML = html;
+      document.getElementById('preview').innerHTML = html;
+      document.getElementById('preview-container').style.display = 'block';
+    }
+
+    function copySignature() {
+        if (!lastGeneratedHTML) return;
+
+        const container = document.createElement('div');
+        container.innerHTML = lastGeneratedHTML;
+        container.style.position = 'fixed';
+        container.style.pointerEvents = 'none';
+        container.style.opacity = 0;
+        container.style.zIndex = -1;
+        document.body.appendChild(container);
+
+        const isSecure = location.protocol === 'https:' || location.hostname === 'localhost';
+
+        // Use Clipboard API if available and on secure context
+        if (isSecure && navigator.clipboard && window.ClipboardItem) {
+            const blob = new Blob([container.innerHTML], { type: 'text/html' });
+            const clipboardItem = new ClipboardItem({ 'text/html': blob });
+
+            navigator.clipboard.write([clipboardItem]).then(() => {
+            alert('Signature copied to clipboard as rich HTML!');
+            document.body.removeChild(container);
+            }).catch(err => {
+            console.error('Clipboard write failed:', err);
+            fallbackCopy(container);
+            });
+        } else {
+            fallbackCopy(container);
+        }
+        }
+
+        function fallbackCopy(container) {
+        const range = document.createRange();
+        range.selectNode(container);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        try {
+            const successful = document.execCommand('copy');
+            alert(successful ? 'Signature copied to clipboard!' : 'Copy command failed.');
+        } catch (err) {
+            console.error('Fallback copy failed:', err);
+            alert('Failed to copy signature. Please copy manually.');
+        }
+
+        selection.removeAllRanges();
+        document.body.removeChild(container);
+        }
+
+    function fallbackCopy(container) {
+      const range = document.createRange();
+      range.selectNode(container);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      try {
+        document.execCommand('copy');
+        alert('Signature copied to clipboard! You can now paste it into your email.');
+      } catch (err) {
+        alert('Failed to copy signature. Please copy manually.');
+      }
+      selection.removeAllRanges();
+      document.body.removeChild(container);
+    }
+  </script>
+
+</body>
+</html>
